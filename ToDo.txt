@@ -1,5 +1,9 @@
-besseres load/save system -> single source
+intigrate into github
 
-buffblock einführen
+redo the command structure
 
-user einführen
+redo the event handler
+
+add users options
+
+add other options (tnt block, buff block, ...)
