@@ -4,18 +4,13 @@ version: 1.0
 author: Andi489156
 
 commands:
-  savelocation:
-    description: Saves your current location to use it later in another command.
-    usage: /<command>
-    permission: SecretBlock.savelocation
-    permission-message: You are not allowed to save your location for a secret block. Sucks, right ?
-  create:
-    description: Creates an secret block on the next block you hit. A saved location is required for a teleporter. You can save your location by typing /sb savelocation
-    usage: /<command> [teleporter, controller]
-    permission: SecretBlock.create
-    permission-message: You are not allowed to create a secret block. Sucks, right ?
-  edit:
-    description: Edits the next secret block you hit.
-    usage: /<command> [controller]
-    permission: SecretBlock.edit
-    permission-message: You are not allowed to edit a secret block. Sucks, right ?
+  sb:
+    description: Use to get information about all commands of SecretBlock.
+    usage: |
+      /sb 
+      /sb savelocation
+      /sb create controller
+      /sb create teleporter
+      /sb edit controller
+    permission: TestPlugin.test
+    permission-message: You don't have the permission to test this.
