@@ -1,5 +1,4 @@
 package io.github.Andi489156.SecretBlock;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import org.bukkit.entity.Player;
 public class SecretController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String ownerName;
+	private ArrayList<String> user = new ArrayList<String>();
 	private SerialLocation ironBlockLocation;
 	private ArrayList<SerialLocation> blockLocation = new ArrayList<SerialLocation>();
 	private Map<SerialLocation, Integer> blockType = new HashMap<SerialLocation, Integer>();
@@ -79,6 +79,14 @@ public class SecretController implements Serializable{
 			controlledBlocks.add(blockLocation.get(i).getBlock());
 		}
 		return controlledBlocks;
+	}
+
+	public ArrayList<String> getUser() {
+		return user;
+	}
+
+	public void addUser(String user) {
+		this.user.add(user);
 	}
 	
 }

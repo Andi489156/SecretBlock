@@ -11,5 +11,6 @@ commands:
       /sb savelocation
       /sb create [controller, teleporter]
       /sb edit controller
+      /sb adduser <player>
     permission: SecretBlock.use
     permission-message: You don't have the permission for that command. You really suck, man.

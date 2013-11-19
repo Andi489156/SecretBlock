@@ -29,10 +29,13 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 	private Map<Player, Location> savedLocation = new HashMap<Player, Location>();
 	private Map<Player, Block> currentEditingBlock = new HashMap<Player, Block>();
 	private Map<Player, ArrayList<Block>> controlledBlockList = new HashMap<Player, ArrayList<Block>>();
+	private Map<Player, String> playerToAdd = new HashMap<Player, String>();
 	
 	private Map<Player, Boolean> onCreateTeleporter = new HashMap<Player, Boolean>();
 	private Map<Player, Boolean> onCreateController = new HashMap<Player, Boolean>();
 	private Map<Player, Boolean> onEditController = new HashMap<Player, Boolean>();
+	private Map<Player, Boolean> onAddUser = new HashMap<Player, Boolean>();
+	
 	
 	private ArrayList<SecretTeleporter> teleporter = new ArrayList<SecretTeleporter>();
 	private ArrayList<SecretController> controller = new ArrayList<SecretController>();
@@ -106,48 +109,45 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 		if(args.length < 1){
 			return false;
 		}
+		if(!(sender instanceof Player)){
+			sender.sendMessage("Only a player can use this command.");
+			return true;
+		}
+		Player player = (Player) sender;
+		
 		switch(args[0]){
 		
 		case "savelocation":
-			if(sender instanceof Player){
-				Player player = (Player) sender;
+			
 				savedLocation.put(player, player.getLocation());
 				player.sendMessage("Your location was saved successfully.");
-			}
-			else{
-				sender.sendMessage("Only a player can use this command.");
-			}
+			
 			break;
 			
 		case "create":
 			if(args.length < 2){
 				return false;
 			}
-			if(sender instanceof Player){
-				Player player = (Player) sender;
-				switch(args[1].toLowerCase()){
-				
-				case "teleporter":
-					if (savedLocation.containsKey(player)
-							&& savedLocation.get(player) != null) {
-						onCreateTeleporter.put(player, true);
-						player.sendMessage("Now click on any block to make it a teleporter.");
-					} else {
-						player.sendMessage("You require a saved location. You can get one by typing /sb savelocation.");
-					}
-					break;
-					
-				case "controller":
-					onCreateController.put(player, true);
-					player.sendMessage("Now click on an iron block to make it a controller.");
-					break;
-					
-				default: 
-					return false;
+			
+			switch(args[1].toLowerCase()){
+			
+			case "teleporter":
+				if (savedLocation.containsKey(player)
+						&& savedLocation.get(player) != null) {
+					onCreateTeleporter.put(player, true);
+					player.sendMessage("Now click on any block to make it a teleporter.");
+				} else {
+					player.sendMessage("You require a saved location. You can get one by typing /sb savelocation.");
 				}
-			}
-			else{
-				sender.sendMessage("Only a player can use this command.");
+				break;
+				
+			case "controller":
+				onCreateController.put(player, true);
+				player.sendMessage("Now click on an iron block to make it a controller.");
+				break;
+				
+			default: 
+				return false;
 			}
 			break;
 		
@@ -155,22 +155,27 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 			if(args.length < 2){
 				return false;
 			}
-			if(sender instanceof Player){
-				Player player = (Player) sender;
-				switch(args[1].toLowerCase()){
-					
-				case "controller":
-					onEditController.put(player, true);
-					player.sendMessage("Now click on a controller to edit.");
-					break;
-					
-				default: 
-					return false;
-				}
+			
+			switch(args[1].toLowerCase()){
+				
+			case "controller":
+				onEditController.put(player, true);
+				player.sendMessage("Now click on a controller to edit.");
+				break;
+				
+			default: 
+				return false;
 			}
-			else{
-				sender.sendMessage("Only a player can use this command.");
+			
+			break;
+			
+		case "adduser":
+			if(args.length < 2){
+				return false;
 			}
+			onAddUser.put(player, true);
+			playerToAdd.put(player, args[1]);
+			player.sendMessage("Now click on a SecretBlock to add this user");
 			break;
 			
 		default:
@@ -250,9 +255,40 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 							}
 						}
 						else{
-							currentEditingBlock.put(player, clickedBlock);
-							controlledBlockList.put(player, controller.get(i).getControlledBlocks());
-							player.sendMessage("Started editing controller block. Place blocks and click the controller again, when you are finished.");
+							if(controller.get(i).getOwnerName().equals(player.getName())){
+								currentEditingBlock.put(player, clickedBlock);
+								controlledBlockList.put(player, controller.get(i).getControlledBlocks());
+								player.sendMessage("Started editing controller block. Place blocks and click the controller again, when you are finished.");
+								return;
+							}
+							ArrayList<String> user = controller.get(i).getUser();
+							for(int k=0; k<user.size(); k++){
+								if(user.get(k).equals(player.getName())){
+									currentEditingBlock.put(player, clickedBlock);
+									controlledBlockList.put(player, controller.get(i).getControlledBlocks());
+									player.sendMessage("Started editing controller block. Place blocks and click the controller again, when you are finished.");
+									return;
+								}
+							}
+							player.sendMessage("You are not allowed to edit this controller. owner: "+controller.get(i).getOwnerName());
+						}
+						return;
+					}
+				}
+			}
+			
+			
+			if(onAddUser.containsKey(player) && onAddUser.get(player) && playerToAdd.containsKey(player)){
+				for(int i=0; i<controller.size(); i++){
+					if(controller.get(i).getIronBlock().equals(clickedBlock)){
+						if(controller.get(i).getOwnerName().equals(player.getName())){
+							controller.get(i).addUser(playerToAdd.get(player));
+							player.sendMessage("You successfully added "+ playerToAdd.get(player) +" to this controller.");
+							playerToAdd.remove(player);
+							onAddUser.put(player, false);
+						}
+						else{
+							player.sendMessage("This controller does not belong to you.");
 						}
 						return;
 					}
