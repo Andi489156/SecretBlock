@@ -1,9 +1,3 @@
-intigrate into github
-
-redo the command structure
-
-redo the event handler
-
 add users options
 
 add other options (tnt block, buff block, ...)

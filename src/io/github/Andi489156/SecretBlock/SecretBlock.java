@@ -98,6 +98,7 @@ public final class SecretBlock extends JavaPlugin implements Listener{
         }catch(Exception e){
              e.printStackTrace();
         }
+		
 		getLogger().info("has been disabled");
 	}
 
@@ -283,8 +284,8 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 			if(!controlledBlockList.containsKey(player)){
 				controlledBlockList.put(player, new ArrayList<Block>());
 			}
-			controlledBlockList.get(player).add(event.getBlock());
-			player.sendMessage("Block[" + event.getBlock().getTypeId() + "] added to controller");
+			controlledBlockList.get(player).add(block);
+			player.sendMessage("Block[" + block.getTypeId() + "] added to controller");
 		}
 	}
 	
@@ -333,8 +334,7 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 	
 	@EventHandler
 	public void OnBlockRedstone(BlockRedstoneEvent event){
-		Block block = event.getBlock();
-		Block block_down = block.getRelative(BlockFace.DOWN);
+		Block block_down = event.getBlock().getRelative(BlockFace.DOWN);
 		
 		if(block_down.getType() == Material.IRON_BLOCK){			
 			for(int i=0; i<controller.size(); i++){
