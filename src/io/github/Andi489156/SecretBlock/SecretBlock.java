@@ -102,7 +102,10 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		switch(cmd.getName().toLowerCase()){
+		if(args.length < 1){
+			return false;
+		}
+		switch(args[0]){
 		
 		case "savelocation":
 			if(sender instanceof Player){
@@ -116,12 +119,12 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 			break;
 			
 		case "create":
-			if(args.length < 1){
+			if(args.length < 2){
 				return false;
 			}
 			if(sender instanceof Player){
 				Player player = (Player) sender;
-				switch(args[0].toLowerCase()){
+				switch(args[1].toLowerCase()){
 				
 				case "teleporter":
 					if (savedLocation.containsKey(player)
@@ -129,7 +132,7 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 						onCreateTeleporter.put(player, true);
 						player.sendMessage("Now click on any block to make it a teleporter.");
 					} else {
-						player.sendMessage("You require a saved location. You can get one by typing /savelocation.");
+						player.sendMessage("You require a saved location. You can get one by typing /sb savelocation.");
 					}
 					break;
 					
@@ -148,12 +151,12 @@ public final class SecretBlock extends JavaPlugin implements Listener{
 			break;
 		
 		case "edit":
-			if(args.length < 1){
+			if(args.length < 2){
 				return false;
 			}
 			if(sender instanceof Player){
 				Player player = (Player) sender;
-				switch(args[0].toLowerCase()){
+				switch(args[1].toLowerCase()){
 					
 				case "controller":
 					onEditController.put(player, true);

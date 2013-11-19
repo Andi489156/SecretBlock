@@ -1,16 +1,15 @@
 name: SecretBlock
 main: io.github.Andi489156.SecretBlock.SecretBlock
-version: 1.0
+version: 1.0.0
 author: Andi489156
 
 commands:
   sb:
     description: Use to get information about all commands of SecretBlock.
     usage: |
-      /sb 
+      Secret Block Commands:
       /sb savelocation
-      /sb create controller
-      /sb create teleporter
+      /sb create [controller, teleporter]
       /sb edit controller
-    permission: TestPlugin.test
-    permission-message: You don't have the permission to test this.
+    permission: SecretBlock.use
+    permission-message: You don't have the permission for that command. You really suck, man.
