@@ -1,6 +1,6 @@
 name: SecretBlock
 main: io.github.Andi489156.SecretBlock.SecretBlock
-version: 1.0.0
+version: 1.1.0
 author: Andi489156
 
 commands:
